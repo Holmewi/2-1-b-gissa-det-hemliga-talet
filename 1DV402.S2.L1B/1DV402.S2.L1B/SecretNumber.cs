@@ -14,45 +14,124 @@ namespace _1DV402.S2.L1B
         private int[] _guessedNumbers;
         private int _number;
 
+
         public const int MinValue = 1;
         public const int MaxValue = 100;
 
-        public bool CanMakeGuess { get; private set; }
+        public bool CanMakeGuess 
+        {
+            get
+            {
+                if (Count >= MaxNumberOfGuesses || _guessedNumbers[Count] == _number)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            } 
+            
+            private set
+            {
+                
+            }
+        }
 
         public int Count { get; private set; }
 
-        public int GuessesLeft { get; private set; }
+        public int GuessesLeft { 
+            get
+            {
+                return MaxNumberOfGuesses - Count;
+            }       
+        } 
 
 
         // Tilldelar _count värdet 0 och ett slumpmässigt tal mellan 1 och 100 till _number
         public void Initialize()
         {
+            // Arrayen rensas till värdet 0
             Array.Clear(_guessedNumbers, 0, Count);
-
+            
             CanMakeGuess = true;
 
             Random randomNumber = new Random();
             _number = randomNumber.Next(MinValue, MaxValue + 1);
 
             Count = 0;
+
+            
         }
 
-        public bool MakeGuess(int guessedNumber)
-        {
+        public bool MakeGuess(int number)
+        {     
             if (Count >= MaxNumberOfGuesses)
             {
                 throw new ApplicationException();
             }
 
-            if (guessedNumber < 1 || guessedNumber > 100)
+            if (number < 1 || number > 100)
             {
                 throw new ArgumentOutOfRangeException();
             }
 
+   
+            // Hittade lösningen på http://stackoverflow.com/questions/1821045/value-equal-to-any-value-in-an-array
+
+
+
+
+            /*
+            if (_guessedNumbers.Contains(number))
+            {
+                Console.WriteLine("Du har redan gissat på {0}. Gör om gissningen!", number);
+                return false;
+            }
+             */
+
+
+            if (_guessedNumbers[Count] == number)
+            {
+                Console.WriteLine("Du har redan gissat på {0}. Gör om gissningen!", number);
+                throw new ApplicationException();
+            }
+
+
+            /*
+            for (int i = 0; i < _guessedNumbers.Length - 1; i++)
+            {
+                int sameGuess = _guessedNumbers[i];
+                if (sameGuess == number)
+                {
+                    Console.WriteLine("Du har redan gissat på {0}. Gör om gissningen!", number);
+                    throw new ApplicationException();
+                }
+            }
+             */
+
+            /*
+            foreach (int sameGuess in _guessedNumbers)
+            {
+                if (number == sameGuess)
+                {
+                    Console.WriteLine("Du har redan gissat på {0}. Gör om gissningen!", number);
+                    throw new ApplicationException();
+                }
+            }
+            _guessedNumbers[Count] = number;
+             */
+
             // Tog ett tag innan jag insåg att jag själv var tvungen att öka världet på _count vid varje gissning.
+
+
+
+
+
+
             Count++;
 
-            if (guessedNumber == _number)
+            if (number == _number)
             {
                 Console.WriteLine("RÄTT GISSAT. Du klarade det på {0} försök.", Count);
                 return true;
@@ -63,15 +142,15 @@ namespace _1DV402.S2.L1B
                 Console.WriteLine("Det hemliga talet är {0}", _number);
                 return false;
             }
-            if (guessedNumber < _number)
+            if (number < _number)
             {
-                Console.WriteLine("{0} är för lågt. Du har {1} gissningar kvar.", guessedNumber, (MaxNumberOfGuesses - Count));
+                Console.WriteLine("{0} är för lågt. Du har {1} gissningar kvar.", number, (MaxNumberOfGuesses - Count));
                 return false;
             }
 
             else
             {
-                Console.WriteLine("{0} är för högt. Du har {1} gissningar kvar.", guessedNumber, (MaxNumberOfGuesses - Count));
+                Console.WriteLine("{0} är för högt. Du har {1} gissningar kvar.", number, (MaxNumberOfGuesses - Count));
                 return false;
             }
 
@@ -81,7 +160,6 @@ namespace _1DV402.S2.L1B
         public SecretNumber()
         {
             _guessedNumbers = new int[MaxNumberOfGuesses];
-            GuessesLeft = MaxNumberOfGuesses - Count;
             Initialize();
         }
     }
