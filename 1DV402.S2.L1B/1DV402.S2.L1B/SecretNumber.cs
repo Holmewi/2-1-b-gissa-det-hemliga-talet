@@ -22,14 +22,13 @@ namespace _1DV402.S2.L1B
         {
             get
             {
-                if (Count >= MaxNumberOfGuesses || _guessedNumbers[Count] == _number)
+                if (Count >= MaxNumberOfGuesses || _guessedNumbers.Length == _number)
                 {
                     return false;
                 }
-                else
-                {
-                    return true;
-                }
+
+                return true;
+                
             } 
             
             private set
@@ -43,7 +42,7 @@ namespace _1DV402.S2.L1B
         public int GuessesLeft { 
             get
             {
-                return MaxNumberOfGuesses - Count;
+                return (MaxNumberOfGuesses - Count);
             }       
         } 
 
@@ -51,17 +50,16 @@ namespace _1DV402.S2.L1B
         // Tilldelar _count värdet 0 och ett slumpmässigt tal mellan 1 och 100 till _number
         public void Initialize()
         {
-            // Arrayen rensas till värdet 0
-            Array.Clear(_guessedNumbers, 0, Count);
-            
-            CanMakeGuess = true;
+            Array.Clear(_guessedNumbers, 0, _guessedNumbers.Length);
 
             Random randomNumber = new Random();
-            _number = randomNumber.Next(MinValue, MaxValue + 1);
+            _number = randomNumber.Next(MinValue, MaxValue + 1); 
+
+            CanMakeGuess = true;
 
             Count = 0;
 
-            
+                  
         }
 
         public bool MakeGuess(int number)
@@ -88,7 +86,7 @@ namespace _1DV402.S2.L1B
                 Console.WriteLine("Du har redan gissat på {0}. Gör om gissningen!", number);
                 return false;
             }
-             */
+             
 
 
             if (_guessedNumbers[Count] == number)
@@ -96,19 +94,24 @@ namespace _1DV402.S2.L1B
                 Console.WriteLine("Du har redan gissat på {0}. Gör om gissningen!", number);
                 throw new ApplicationException();
             }
+            */
 
 
-            /*
-            for (int i = 0; i < _guessedNumbers.Length - 1; i++)
+            //Array.Sort(_guessedNumbers);
+            //int sameGuess = Array.BinarySearch(_guessedNumbers, number);
+            
+            for (int i = 0; i < _guessedNumbers.Length; i++)
             {
-                int sameGuess = _guessedNumbers[i];
-                if (sameGuess == number)
+
+                if (number == _guessedNumbers[i])
                 {
                     Console.WriteLine("Du har redan gissat på {0}. Gör om gissningen!", number);
-                    throw new ApplicationException();
+                    CanMakeGuess = false;
+                    return false;
                 }
             }
-             */
+             
+            
 
             /*
             foreach (int sameGuess in _guessedNumbers)
@@ -122,18 +125,18 @@ namespace _1DV402.S2.L1B
             _guessedNumbers[Count] = number;
              */
 
-            // Tog ett tag innan jag insåg att jag själv var tvungen att öka världet på _count vid varje gissning.
 
+            if (CanMakeGuess == true)
+            {
+                Count++;
+            }
 
-
-
-
-
-            Count++;
+            
 
             if (number == _number)
             {
                 Console.WriteLine("RÄTT GISSAT. Du klarade det på {0} försök.", Count);
+                CanMakeGuess = false;
                 return true;
             }
 
